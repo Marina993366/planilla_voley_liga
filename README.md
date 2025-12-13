@@ -27,26 +27,7 @@ Está pensada para **ligas amateurs, clubes y entrenadores** que buscan una alte
 ## ⚙️ Tecnologías utilizadas
 - **Frontend:** HTML, CSS, JavaScript (vanilla)
 - **Diseño responsivo:** CSS Grid / Flexbox
-- **Editor recomendado:** Visual Studio Code
-- **Próximas integraciones:** Backend Python + SQLite / PostgreSQL
-
----
-
-## 🚀 Instalación y uso local
-
-1. **Clonar el repositorio:**
-   ```bash
-   git clone https://github.com/Marina993366/planilla_voley_livosur.git
-   cd planilla_voley_livosur
-   ```
-
-2. **Iniciar servidor local (opcional):**
-   ```bash
-   python -m http.server 8000
-   ```
-   Luego abrir: [http://localhost:8000](http://localhost:8000)
-
-3. **O abrir directamente** `index.html` en tu navegador.
+- **Editor:** Visual Studio Code
 
 ---
 
@@ -65,17 +46,6 @@ Está pensada para **ligas amateurs, clubes y entrenadores** que buscan una alte
 ├─ img/
 └─ README.md
 ```
-
----
-
-## 🌍 Despliegue automático (GitHub Pages)
-
-Este proyecto incluye un flujo de trabajo (`.github/workflows/deploy.yml`) que construye y publica automáticamente el sitio en **GitHub Pages** cada vez que haces `push` en la rama `main`.  
-Una vez activado, tu app estará disponible en:
-```
-https://Marina993366.github.io/planilla_voley_livosur/
-```
-
 ---
 
 ## 🤝 Cómo contribuir
