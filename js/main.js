@@ -5,7 +5,6 @@ import * as modals from './modals.js';
 
 /**
  * Asigna manejadores de eventos a los elementos de la UI.
- * Este enfoque centralizado es más robusto y fácil de mantener que los 'onclick' en el HTML.
  */
 function setupEventListeners() {
     document.body.addEventListener('click', (e) => {
