@@ -1,0 +1,43 @@
+# Simple workflow for deploying static content to GitHub Pages
+name: Deploy static content to Pages
+
+on:
+  push:
+    branches: ["main"]
+  # Permite ejecutar el workflow manualmente desde la pestaña "Actions"
+  workflow_dispatch:
+
+# Otorga permisos de lectura al token de GITHUB_TOKEN para el despliegue
+permissions:
+  contents: read
+  pages: write
+  id-token: write
+
+# Asegura que solo se ejecute un despliegue a la vez.
+concurrency:
+  group: "pages"
+  cancel-in-progress: false
+
+jobs:
+  # El trabajo de despliegue
+  deploy:
+    environment:
+      name: github-pages
+      url: ${{ steps.deployment.outputs.page_url }}
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout
+        uses: actions/checkout@v4
+      - name: Setup Pages
+        uses: actions/configure-pages@v5
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          # Importante: Indica a GitHub que el index.html está en la carpeta raíz (/)
+          path: './' 
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
+      - name: Deploy to GitHub Pages
+        id: deployment
+        uses: actions/deploy-pages@v4
