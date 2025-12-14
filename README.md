@@ -1,7 +1,7 @@
 # 🏐 Planilla Livosur — Planilla de Vóley Online
 
 **Proyecto:** Planilla digital para partidos de vóley (liga amateur), exportable y con estadísticas.  
-**[🔗 Ver Demo en Vivo aquí (GitHub Pages)] https://marina993366.github.io/planilla_voley_liga/** **Proyecto:** Planilla digital para partidos de vóley (liga amateur), exportable y con estadísticas.  
+**[🔗 Ver Demo en Vivo aquí (GitHub Pages)](https://marina993366.github.io/planilla_voley_liga/)** **Proyecto:** Planilla digital para partidos de vóley (liga amateur), exportable y con estadísticas.  
 
 ---
 
