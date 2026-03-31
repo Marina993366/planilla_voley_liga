@@ -31,7 +31,7 @@ jobs:
         uses: actions/upload-pages-artifact@v3
         with:
           # Carpeta que se subirá: la raíz del repositorio (donde está index.html)
-          path: './' 
+          path: './frontend'
 
   # Este trabajo depende del build y realiza el despliegue final
   deploy:
