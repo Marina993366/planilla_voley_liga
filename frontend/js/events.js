@@ -86,6 +86,8 @@ export function updateScoreAfterStat(teamId) {
     if (!setWasWon) {
         render(); // Si el set no terminó, simplemente actualiza la UI.
     }
+
+    sendScoreToBackend(); // Envía el marcador actualizado al backend después de cada punto.
 }
 
 /**
@@ -300,3 +302,27 @@ export function exportPDF() {
     doc.save(`Partido-${winner.name}-vs-${loser.name}.pdf`);
 }
 
+async function sendScoreToBackend() {
+    try {
+        const response = await fetch("http://127.0.0.1:8000/partidos/0", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                teamA: state.teamA.score,
+                teamB: state.teamB.score,
+                setsA: state.teamA.sets,
+                setsB: state.teamB.sets,
+                serving: state.teamA.serving ? "A" : "B"
+            })
+        });
+
+        if (!response.ok) {
+            console.error("Error al enviar datos al backend");
+        }
+
+    } catch (error) {
+        console.error("Error de conexión:", error);
+    }
+}
