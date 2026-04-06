@@ -2,6 +2,7 @@ import { state, resetMatch, clearState } from './state.js';
 import { render } from './ui.js';
 import * as events from './events.js';
 import * as modals from './modals.js';
+import { setPartidoId, API_URL } from './api.js'; // Importamos la URL y el setter
 
 /**
  * Asigna manejadores de eventos a los elementos de la UI.
@@ -14,9 +15,8 @@ function setupEventListeners() {
         const action = button.dataset.action;
         const teamId = button.closest('[data-team-id]')?.dataset.teamId;
 
-        // Comprobación previa para acciones que requieren plantillas cargadas
         if (['open-serve-modal', 'open-lineup-modal'].includes(action) && !events.checkRostersComplete()) {
-            alert("Por favor, carga las plantillas completas (mínimo 6 jugadores y 1 capitán por equipo) antes de continuar.");
+            alert("Por favor, carga las plantillas completas antes de continuar.");
             return;
         }
 
@@ -32,7 +32,7 @@ function setupEventListeners() {
             'open-stats-summary': modals.openStatsSummaryModal,
             'export-pdf': events.exportPDF,
             'reset-match': resetMatch,
-            'clear-data': clearState, // Añadido para manejar el botón Limpiar Datos
+            'clear-data': clearState,
         };
 
         if (actionMap[action]) {
@@ -42,25 +42,42 @@ function setupEventListeners() {
 }
 
 /**
- * Función de inicialización de la aplicación.
+ * Función para crear un nuevo partido en el backend
  */
+async function crearPartido() {
+    try {
+        const response = await fetch(`${API_URL}/partidos`, { 
+            method: "POST",
+            headers: { "Content-Type": "application/json" },
+            body: JSON.stringify({
+                equipo_local: state.teamA.name || "Equipo Local",
+                equipo_visitante: state.teamB.name || "Equipo Visitante",
+                estado: "en_vivo"
+            })
+        });
+
+        const data = await response.json();
+        console.log("Partido creado en el servidor:", data);
+
+        // AQUÍ es donde guardamos el ID que nos dio el backend
+        setPartidoId(data.id); 
+
+        return data;
+    } catch (error) {
+        console.error("Error creando partido:", error);
+    }
+}
+
 function init() {
     setupEventListeners();
     render();
     
-    // Comprobaciones iniciales al cargar la página:
+    // Al iniciar, creamos el registro en el backend
+    crearPartido();
+
     if (!events.checkRostersComplete()) {
-        console.warn("Plantillas incompletas. Por favor, carga los jugadores.");
-        // Opcional: Mostrar un mensaje al usuario o abrir directamente el modal de jugadores.
-        // modals.openPlayerModal('A'); // Ejemplo: Abrir modal para equipo A
-    } else if (!state.initialServeTeamId) {
-        // Si las plantillas están completas pero no se ha definido el saque, abre el modal.
-        modals.openServeModal();
-    } else if (state.teamA.startingSix.includes(-1) || state.teamB.startingSix.includes(-1)) {
-        // Si ya se definió el saque pero la formación inicial no está cargada, abre el modal de formación.
-        modals.openLineupModal();
+        console.warn("Plantillas incompletas.");
     }
 }
 
 document.addEventListener('DOMContentLoaded', init);
-

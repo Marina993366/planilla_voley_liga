@@ -1,6 +1,7 @@
 import { state, checkRostersComplete } from './state.js';
 import { render } from './ui.js';
 import { openStatsModal, openServeModal, openLineupModal } from './modals.js';
+import { getPartidoId } from './api.js';
 
 // Exporta la función para usarla en main.js
 export { checkRostersComplete };
@@ -98,7 +99,7 @@ function checkSetWin() {
     const { teamA, teamB, config } = state;
     // Condiciones para ganar: alcanzar el umbral Y tener al menos 2 puntos de diferencia.
     const aWins = teamA.score >= config.winThreshold && teamA.score >= teamB.score + 2;
-    const bWins = teamB.score >= config.winThreshold && bWins.score >= teamA.score + 2;
+    const bWins = teamB.score >= config.winThreshold && teamB.score >= teamA.score + 2;
 
     if (aWins) { 
         teamA.sets++; // Incrementa los sets ganados.
@@ -301,20 +302,25 @@ export function exportPDF() {
     // Guarda el archivo PDF con un nombre descriptivo.
     doc.save(`Partido-${winner.name}-vs-${loser.name}.pdf`);
 }
-
+/*Envía el marcador actualizado al backend */
 async function sendScoreToBackend() {
+    const idActual = getPartidoId(); // Obtiene el ID guardado
+    // Si aún no tenemos ID, no intentamos actualizar
+    if (idActual === null || idActual === undefined) {
+        console.warn("No hay un ID de partido activo para actualizar.");
+        return;
+    }
+
     try {
-        const response = await fetch("http://127.0.0.1:8000/partidos/0", {
+        const response = await fetch(`${API_URL}/partidos/${idActual}`, { // ID dinámico
             method: "PUT",
-            headers: {
-                "Content-Type": "application/json"
-            },
+            headers: { "Content-Type": "application/json" },
             body: JSON.stringify({
-                teamA: state.teamA.score,
-                teamB: state.teamB.score,
-                setsA: state.teamA.sets,
-                setsB: state.teamB.sets,
-                serving: state.teamA.serving ? "A" : "B"
+                puntos_local: state.teamA.score,
+                puntos_visitante: state.teamB.score,
+                sets_local: state.teamA.sets,
+                sets_visitante: state.teamB.sets,
+                estado: "en_vivo"
             })
         });
 
